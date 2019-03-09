@@ -8,9 +8,9 @@ var connection = mysql.createConnection({
     database: 'bamazon_db'
 });
 connection.connect(function(err){
-// addNewProduct("Beans","Grocery",1,1000);
+// addNewProduct("Apples","Grocery",2,5000);
 showTable();
-var deptArray=generateDeparments();
+// var deptArray=generateDeparments();
 console.log(deptArray);
 connection.end();
 });
@@ -37,47 +37,57 @@ function showTable(){
         console.log(response);
     })
 };
-// inquirer.prompt([
-// {
-//     message:"What would you like to do?",
-//     type:"list",
-//     choices:["View Products For Sale","View Low Inventory","Add to Inventory","Add New Product"],
-//     name:"firstQuestion"
-// }
-// ]).then(function(response){
-//     if(response.firstQuestion==="Add New Product"){
-//         inquirer.prompt([{
-//             name:"name",
-//             message:"What is the name of the product?",
-//             type:"input"
-//         },{
-//             name:"department",
-//             message:"What department is this product in?",
-//             type:"list",
-//             choices:[]
-//         },{
 
-//         },{
+function askQuestions(){
+inquirer.prompt([
+{
+    message:"What would you like to do?",
+    type:"list",
+    choices:["View Products For Sale","View Low Inventory","Add to Inventory","Add New Product"],
+    name:"firstQuestion"
+}
+]).then(function(response){
 
-//         }
+    if(response.firstQuestion==="Add New Product"){
+        var deptArray=generateDeparments();
+        inquirer.prompt([{
+            name:"name",
+            message:"What is the name of the product?",
+            type:"input"
+        },{
+            name:"department",
+            message:"What department is this product in?",
+            type:"list",
+            choices:deptArray
+        },{
+            name:"price",
+            message:"What is the pprice of this product?"
+
+        },{
+
+        }
     
-//     ]).then(function(responseTwo){
+    ]).then(function(responseTwo){
 
-//         });
-//     }
-// });
+        });
+    }
+});
+
+}
 function generateDeparments(){
     connection.query("SELECT department_name FROM products",function(err,response){
-        console.log(response[0].departmentName);
+        console.log(response[0].department_name);
         if(err){
             console.log(err);
         }
         var departmentArray=[];
         for (var i=0;i<response.length;i++){
-            if (departmentArray.indexOf(response[i].department_name===-1)){
+            if (departmentArray.indexOf(response[i].department_name)===-1){
                 departmentArray.push(response[i].department_name);
+                console.log(response[i].department_name);
             }
         }
+        console.log(departmentArray);
         return departmentArray;
     })
 };
