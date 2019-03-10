@@ -27,7 +27,7 @@ connection.query("SELECT DISTINCT department_name FROM products",function(err,re
 // console.log(depts);
 // setTimeout(askQuestions(),500);
 // addInventory(10,1);
-addStock(2,900);
+// addStock(2,900);
 askQuestions(depts);
 });
 
@@ -41,7 +41,7 @@ connection.query("INSERT INTO products SET ?",{
     if(err){
         console.error(err);
     }
-
+showTable();
 })
 };
 
@@ -51,7 +51,8 @@ function showTable(){
             console.error(err);
         }
         console.table(response);
-    })
+    });
+    connection.end();
 };
 
 function askQuestions(depts){
@@ -91,17 +92,20 @@ inquirer.prompt([
     }
     if(response.firstQuestion==="View Products For Sale"){
         showTable();
+
     }
     if(response.firstQuestion==="View Low Inventory"){
         viewLow();
+
     }
-//     if(response.firstQuestion==="Add to Inventory"){
-//         inquirer.prompt([{message:"What item ID would you like to add stock?",name:"id",type:"input"},
-// {name:"quantity",type:"input",message:"How much stock would you like to add?"}]).then(function(response){
-//     // addInventory(response.id,response.quantity);
-// })
+    if(response.firstQuestion==="Add to Inventory"){
+        inquirer.prompt([{message:"What item ID would you like to add stock?",name:"id",type:"input"},
+{name:"quantity",type:"input",message:"How much stock would you like to add?"}]).then(function(response){
+    addStock(response.id,response.quantity);
+});
         
-//     }
+    }
+    
 });
 
 };
@@ -110,7 +114,7 @@ inquirer.prompt([
 //         if(err){
 //             console.log(err);
 
-//         }
+//         }cle
 //         var temp=[];
 //         for(var i=0;i<response.length;i++){
 //             temp.push(response[i].department_name);
@@ -131,6 +135,7 @@ function viewLow(){
         }
         console.table(response);
     })
+    connection.end();
 }
 // function addInventory(ID,quantity){
 //     var newStock;
@@ -158,12 +163,13 @@ function addStock(ID,stock){
         if(err){
             console.log(error);
         }
-        console.log(response[0].stock_quantity);
+        // console.log(response[0].stock_quantity);
         currentStock=response[0].stock_quantity;
     newStock=Number(currentStock)+Number(stock);
-    console.log(newStock);
+    // console.log(newStock);
     changeStock(ID,newStock);
     showTable();
+    
 });
 
 };
@@ -172,5 +178,5 @@ function changeStock(ID,stock){
         if(err){
             console.log(err);
         }
-    })
-}
+    });
+};
