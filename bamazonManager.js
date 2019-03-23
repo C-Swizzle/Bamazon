@@ -24,6 +24,7 @@ connection.query("SELECT DISTINCT department_name FROM products",function(err,re
         depts.push(response[i].department_name);
     }
 });
+
 // console.log(depts);
 // setTimeout(askQuestions(),500);
 // addInventory(10,1);
